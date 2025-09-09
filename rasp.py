@@ -2,7 +2,7 @@ from flask import Flask
 
 rasp = Flask(__name__)
 
-@app.route("/")
+@rasp.route("/")
 def index():
     return "Запуск flask"
  
