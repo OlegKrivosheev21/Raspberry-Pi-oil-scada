@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Система контроля нефти в резервуаре</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <h1>Система контроля нефти в резервуаре</h1>
+
+    <div class="scada">
+        <!-- Бак со шкалой -->
+        <div class="tank-container">
+            <div class="scale">
+                <div>100</div>
+                <div class="mark-red">80</div>
+                <div>75</div>
+                <div>50</div>
+                <div>25</div>
+                <div class="mark-red">20</div>
+                <div>0</div>
+            </div>
+            <div class="tank">
+                <div class="oil-level" id="oilLevel"></div>
+            </div>
+        </div>
+        <!-- Датчики -->
+        <!-- Датчик температуры -->
+        <div class="sensors">
+            <div class="sensor">
+                <div class="circle"></div>
+                TE&nbsp;<span id="temp">--</span>°C
+            </div>
+            <!-- Датчик давления -->
+            <div class="sensor">
+                <div class="circle"></div>
+                PT&nbsp;<span id="pressure">--</span> МПа
+            </div>
+        </div>
+    </div>
+
+    <!-- Текстовая информация -->
+    <p>Уровень нефти: <span id="oil_level">--</span> %</p>
+    <p>Состояние насоса: <span id="pump_status">--</span></p>
+
+    <!-- Кнопки вкл/выкл насос -->
+    <button onclick="fetch('/pump/on').then(updateData)">Включить насос</button>
+    <button onclick="fetch('/pump/off').then(updateData)">Выключить насос</button>
+</body>
+</html>

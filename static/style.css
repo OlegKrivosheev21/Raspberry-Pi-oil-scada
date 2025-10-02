@@ -1,0 +1,83 @@
+/* ===== Общие стили страницы ===== */
+body {
+    font-family: Arial, sans-serif; /* Шрифт интерфейса */
+    background: #444;              /* Тёмный фон */
+    color: #fff;                   /* Белый текст */
+    text-align: center;            /* Выравнивание по центру */
+}
+
+/* ===== Основной контейнер SCADA ===== */
+.scada {
+    display: flex;                 /* Горизонтальное расположение */
+    justify-content: center;       /* Центрирование по горизонтали */
+    align-items: center;           /* Центрирование по вертикали */
+    margin: 30px;                  /* Отступы вокруг */
+}
+
+/* ===== Датчики (список справа/слева от бака) ===== */
+.sensors {
+    display: flex;                 
+    flex-direction: column;        /* Вертикальное расположение датчиков */
+    justify-content: space-around; /* Равномерное распределение по высоте */
+    height: 250px;                 /* Общая высота блока датчиков */
+}
+
+.sensor {
+    display: flex;                 /* Значок + текст в одну строку */
+    align-items: center;           /* Выравнивание по вертикали */
+    font-size: 18px;               /* Размер текста датчиков */
+}
+
+/* Маленький индикатор-кружок рядом с датчиком */
+.circle {
+    width: 20px;
+    height: 20px;
+    background: #aaa;              /* Серый цвет по умолчанию */
+    border-radius: 50%;            /* Круглая форма */
+    margin-right: 10px;            /* Отступ справа от текста */
+}
+
+/* ===== Бак и шкала ===== */
+.tank-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;                     /* Расстояние между шкалой и баком */
+}
+
+/* Шкала уровня нефти */
+.scale {
+    display: flex;
+    flex-direction: column;        /* Вертикальные значения */
+    justify-content: space-between;/* Равномерное распределение делений */
+    height: 250px;                 /* Высота шкалы */
+    font-size: 14px;
+    color: white;
+    text-align: right;             /* Подписи справа от шкалы */
+    padding-right: 5px;
+}
+
+/* резервуар */
+.tank {
+    position: relative;
+    width: 80px;                   /* Ширина бака */
+    height: 250px;                 /* Высота бака */
+    border: 3px solid #aaa;        /* Серая рамка */
+    border-radius: 20px;           /* Скруглённые углы */
+    background: #555;              /* Тёмный фон внутри */
+    overflow: hidden;              /* Чтобы уровень не выходил за границы */
+}
+
+/* Уровень нефти внутри бака */
+.oil-level {
+    position: absolute;
+    bottom: 0;                     /* Заполнение снизу вверх */
+    width: 100%;
+    height: 0%;                    /* Изначально пусто */
+    background: linear-gradient(to top, #4dd0e1, #80deea); /* Цвет нефти */
+    transition: height 0.5s ease;  /* Плавное изменение уровня */
+}
+.mark-red {     /* цвет для крит. значений уровня нефти на шкале */
+    color: red;
+    font-weight: bold;
+}

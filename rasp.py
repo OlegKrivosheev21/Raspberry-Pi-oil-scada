@@ -1,67 +1,34 @@
-from flask import Flask, jsonify, render_template_string
+
 from sensors.virt_sensors import get_sensor_data
 from control.pump import turn_on, turn_off, pump_state
-
+from flask import Flask, jsonify, render_template
 rasp = Flask(__name__)
 
 # Главная страница
 @rasp.route("/")
 def dashboard():
-    html = """
-    <html>
-      <head>
-        <title>Oil SCADA</title>
-      </head>
-      <body>
-        <h1>Raspberry Pi Oil SCADA</h1>
-        <p>Температура: <span id="temp">-</span> °C</p>
-        <p>Давление: <span id="pressure">-</span> бар</p>
-        <p>Уровень нефти: <span id="oil_level">-</span> %</p>
-        <p>Состояние насоса: <span id="pump_status">OFF</span></p>
+    return render_template("HMI.html")
 
-        <button onclick="fetch('/pump/on').then(updatePump)">Включить насос</button>
-        <button onclick="fetch('/pump/off').then(updatePump)">Выключить насос</button>
-
-        <script>
-        // Обновление данных датчиков через AJAX
-        function updateData() {
-            fetch('/sensors')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('temp').innerText = data.temperature;
-                    document.getElementById('pressure').innerText = data.pressure;
-                    document.getElementById('oil_level').innerText = data.oil_level;
-                });
-        }
-
-        // Обновление состояния насоса
-        function updatePump(response) {
-            response.json().then(data => {
-                document.getElementById('pump_status').innerText = data.pump;
-            });
-        }
-
-        // Автообновление каждые 2 секунды
-        setInterval(updateData, 2000);
-        updateData(); // сразу при загрузке
-        </script>
-      </body>
-    </html>
-    """
-    return render_template_string(html)
-
-# Маршрут для данных датчиков
+# Получение данных с сенсоров
 @rasp.route("/sensors")
 def sensors_route():
-    return jsonify(get_sensor_data())
+    # Сначала получаем текущие показания
+    data = get_sensor_data() 
 
+    # Автоматическое управление насосом
+    if data["oil_level"] < 20:
+        turn_on()   # если уровень ниже 20 процентов то вкл насос
+    elif data["oil_level"] > 80:
+        turn_off()  # если выше 80 то выкл насос
+    data["pump_status"] = pump_state["status"]  # добавляем состояние насоса
+    return jsonify(data)
 # Маршруты для управления насосом
-@rasp.route("/pump/on")
+@rasp.route("/pump/on") #вкл насос
 def pump_on_route():
     turn_on()
     return jsonify({"pump": pump_state["status"]})
 
-@rasp.route("/pump/off")
+@rasp.route("/pump/off") #выкл насос
 def pump_off_route():
     turn_off()
     return jsonify({"pump": pump_state["status"]})
